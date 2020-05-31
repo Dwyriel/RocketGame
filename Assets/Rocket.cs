@@ -20,12 +20,13 @@ public class Rocket : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        np = 90 * Time.deltaTime;
-        nm = np * (-1);
-        ProcessInput();
+        np = 110 * Time.deltaTime;
+        nm = (-1) * np;
+        Thrust();
+        Rotate();
     }
 
-    private void ProcessInput()
+    private void Thrust()
     {
         if (Input.GetKey(KeyCode.W))
         {
@@ -41,7 +42,11 @@ public class Rocket : MonoBehaviour
         {
             aS.Stop();
         }
+    }
 
+    private void Rotate()
+    {
+        rb.freezeRotation = true; //pauses rotation physics
         if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D))
         {
             print("Ignore A & D");
@@ -49,12 +54,11 @@ public class Rocket : MonoBehaviour
         else if (Input.GetKey(KeyCode.D))
         {
             transform.Rotate(0, 0, nm, Space.World);
-            print(nm);
         }
         else if (Input.GetKey(KeyCode.A))
         {
             transform.Rotate(0, 0, np, Space.World);
-            print(np);
         }
+        rb.freezeRotation = false;
     }
 }
