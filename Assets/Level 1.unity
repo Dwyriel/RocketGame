@@ -43,7 +43,7 @@ RenderSettings:
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 11
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -89,7 +89,8 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000002, guid: 2ee4f30e04d620248ad979cc5d1e1302,
+    type: 2}
   m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
@@ -347,8 +348,8 @@ Transform:
   - {fileID: 1411394093}
   - {fileID: 1039735480}
   - {fileID: 15741243}
-  - {fileID: 837936179}
   - {fileID: 685499039}
+  - {fileID: 837936179}
   - {fileID: 1428160339}
   - {fileID: 87317058}
   - {fileID: 1885928881}
@@ -455,7 +456,7 @@ Transform:
   m_LocalScale: {x: 11.781179, y: 22.572596, z: 15}
   m_Children: []
   m_Father: {fileID: 466509747}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: -6.622, y: -14.705001, z: -35.259003}
 --- !u!23 &685499040
 MeshRenderer:

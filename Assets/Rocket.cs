@@ -2,39 +2,43 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Rocket : MonoBehaviour
 {
     Rigidbody rb;
     AudioSource aS;
     [SerializeField] float rcsThrust = 110f, mainThrust = 800f;
+    [SerializeField] AudioClip mainEngine, rcsSound, death, win, nextLevel; //add nextLevel sound
+    enum State { Alive, Dying, Transcending }
+    State pState = State.Alive;
+    Scene scene;
 
     // Use this for initialization
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        aS = GetComponent<AudioSource>();
+        aS = GetComponent<AudioSource>("one");
+        scene = SceneManager.GetActiveScene();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Thrust();
-        Rotate();
+        if (pState == State.Alive)
+        {
+            InputThrust();
+            InputRotation();
+        }
     }
 
-    private void Thrust()
+    private void InputThrust()
     {
         float thrust = mainThrust * Time.deltaTime;
         if (Input.GetKey(KeyCode.W))
         {
             rb.AddRelativeForce(Vector3.up * thrust);
-            if (!aS.isPlaying) aS.Play();
-        }
-        else if (Input.GetKey(KeyCode.S))
-        {
-            rb.AddRelativeForce(Vector3.down * thrust);
-            if (!aS.isPlaying) aS.Play();
+            if (!aS.isPlaying) aS.PlayOneShot(mainEngine, 0.8f);
         }
         else
         {
@@ -42,13 +46,15 @@ public class Rocket : MonoBehaviour
         }
     }
 
-    private void Rotate()
+    private void InputRotation() //Find a Way to play rcsSound
     {
         float rotation = rcsThrust * Time.deltaTime;
-        rb.freezeRotation = true; //pauses rotation physics
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+        {
+            rb.maxAngularVelocity = 0f; // reduces rotation enough to be able to turn
+        }
         if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D))
         {
-
             transform.Rotate(0, 0, 0, Space.World);
         }
         else if (Input.GetKey(KeyCode.D))
@@ -59,25 +65,64 @@ public class Rocket : MonoBehaviour
         {
             transform.Rotate(0, 0, rotation, Space.World);
         }
-        rb.freezeRotation = false;
+        else rb.maxAngularVelocity = 7f;
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        switch (collision.gameObject.tag)
-        {
-            case "Friendly":
-                print("Not ded");
-                break;
-            case "Fuel":
-                print("got fuel");
-                break;
-            case "Finish":
-                print("win");
-                break;
-            default:
-                print("die");
-                break;
-        }
+        if (pState == State.Alive)
+            switch (collision.gameObject.tag)
+            {
+                case "Friendly":
+                    break;
+                case "Fuel": // TODO
+                    print("got fuel");
+                    break;
+                case "Finish":
+                    Victory();
+                    break;
+                default:
+                    Death();
+                    break;
+            }
+    }
+
+    private void Victory()
+    {
+        DeathOrVictorySound(win);
+        pState = State.Transcending;
+        Invoke("LoadNextScene", 3f);
+    }
+
+    private void Death()
+    {
+        DeathOrVictorySound(death);
+        pState = State.Dying;
+        Invoke("LoadPreviousLevel", 4f);
+    }
+
+    private void DeathOrVictorySound(AudioClip aC)
+    {
+        rb.maxAngularVelocity = 7f; //if player dies or wins holding A or B it resets anyway;
+        aS.Stop();
+        aS.PlayOneShot(aC, 1f);
+    }
+
+    private void LoadNextScene()
+    {
+        if (scene.name == "Sandbox")
+            SceneManager.LoadScene(scene.buildIndex);
+        else if ((scene.buildIndex + 1) < SceneManager.sceneCountInBuildSettings)
+            SceneManager.LoadScene(scene.buildIndex + 1);
+        else SceneManager.LoadScene(0);
+    }
+    //Loads new scene, so pState goes back to alive, change later if needed.
+    private void LoadPreviousLevel()
+    {
+        if (scene.name == "Sandbox")
+            SceneManager.LoadScene(scene.buildIndex);
+        else if (scene.buildIndex > 0)
+            SceneManager.LoadScene(scene.buildIndex - 1);
+        else SceneManager.LoadScene(0);
     }
 }
