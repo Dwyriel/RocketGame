@@ -9,7 +9,8 @@ public class Rocket : MonoBehaviour
     Rigidbody rb;
     AudioSource asMainThruster, asRCSThruster, asOthers;
     [SerializeField] float rcsThrust = 110f, mainThrust = 800f;
-    [SerializeField] AudioClip mainEngine, rcsSound, death, win, bm; //add nextLevel sound
+    [SerializeField] AudioClip mainEngine, rcsSound, death, win, bm;
+    [SerializeField] ParticleSystem engineParticle, winParticle, deathParticle;
     enum State { Alive, Dying, Transcending }
     State pState = State.Alive;
     Scene scene;
@@ -44,15 +45,17 @@ public class Rocket : MonoBehaviour
         if (Input.GetKey(KeyCode.W))
         {
             rb.AddRelativeForce(Vector3.up * thrust);
+            if (!engineParticle.isEmitting) engineParticle.Play();
             if (!asMainThruster.isPlaying) asMainThruster.PlayOneShot(mainEngine, 0.8f);
         }
         else
         {
             asMainThruster.Stop();
+            engineParticle.Stop();
         }
     }
 
-    private void InputRotation() //Find a Way to play rcsSound
+    private void InputRotation()
     {
         float rotation = rcsThrust * Time.deltaTime;
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
@@ -101,12 +104,14 @@ public class Rocket : MonoBehaviour
     private void Victory()
     {
         DeathOrVictorySound(win);
+        winParticle.Play();
         pState = State.Transcending;
         Invoke("LoadNextScene", 3f);
     }
 
     private void Death()
     {
+        deathParticle.Play();
         DeathOrVictorySound(death);
         pState = State.Dying;
         Invoke("LoadPreviousLevel", 4f);
@@ -114,6 +119,7 @@ public class Rocket : MonoBehaviour
 
     private void DeathOrVictorySound(AudioClip aC)
     {
+        engineParticle.Stop();
         asOthers.Stop();
         asOthers.volume = 1f;
         asRCSThruster.Stop();
@@ -124,7 +130,6 @@ public class Rocket : MonoBehaviour
 
     private void LoadNextScene()
     {
-        
         if (scene.name == "Sandbox")
             SceneManager.LoadScene(scene.buildIndex);
         else if ((scene.buildIndex + 1) < SceneManager.sceneCountInBuildSettings)
