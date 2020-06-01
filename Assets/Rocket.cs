@@ -8,11 +8,11 @@ public class Rocket : MonoBehaviour
 {
     Rigidbody rb;
     AudioSource asMainThruster, asRCSThruster, asOthers;
+    enum State { Alive, Dying, Transcending, Debug }
+    [SerializeField] State pState = State.Alive;
     [SerializeField] float rcsThrust = 110f, mainThrust = 800f, musicVolume = 0.2f;
     [SerializeField] AudioClip mainEngine, rcsSound, death, win, bm;
     [SerializeField] ParticleSystem engineParticle, winParticle, deathParticle;
-    enum State { Alive, Dying, Transcending }
-    State pState = State.Alive;
     Scene scene;
 
     // Use this for initialization
@@ -31,12 +31,26 @@ public class Rocket : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Debug.isDebugBuild)
+            DebugMode();
         asOthers.volume = musicVolume;
-        if (pState == State.Alive)
+        if (pState == State.Alive || pState.Equals(State.Debug))
         {
             InputThrust();
             InputRotation();
         }
+    }
+
+    private void DebugMode()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            LoadNextScene();
+        }
+        if (pState == State.Alive && Input.GetKeyDown(KeyCode.C))
+            pState = State.Debug;
+        else if (pState == State.Debug && Input.GetKeyDown(KeyCode.C))
+            pState = State.Alive;
     }
 
     private void InputThrust()
