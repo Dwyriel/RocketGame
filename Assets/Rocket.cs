@@ -7,9 +7,9 @@ using UnityEngine.SceneManagement;
 public class Rocket : MonoBehaviour
 {
     Rigidbody rb;
-    AudioSource aS;
+    AudioSource asMainThruster, asRCSThruster, asOthers;
     [SerializeField] float rcsThrust = 110f, mainThrust = 800f;
-    [SerializeField] AudioClip mainEngine, rcsSound, death, win, nextLevel; //add nextLevel sound
+    [SerializeField] AudioClip mainEngine, rcsSound, death, win, bm; //add nextLevel sound
     enum State { Alive, Dying, Transcending }
     State pState = State.Alive;
     Scene scene;
@@ -18,7 +18,13 @@ public class Rocket : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        aS = GetComponent<AudioSource>("one");
+        var AudioSources = GetComponents<AudioSource>();
+        asMainThruster = AudioSources[0];
+        asRCSThruster = AudioSources[1];
+        asOthers = AudioSources[2];
+        asOthers.clip = bm;
+        asOthers.volume = 0.3f;
+        asOthers.Play();
         scene = SceneManager.GetActiveScene();
     }
 
@@ -38,11 +44,11 @@ public class Rocket : MonoBehaviour
         if (Input.GetKey(KeyCode.W))
         {
             rb.AddRelativeForce(Vector3.up * thrust);
-            if (!aS.isPlaying) aS.PlayOneShot(mainEngine, 0.8f);
+            if (!asMainThruster.isPlaying) asMainThruster.PlayOneShot(mainEngine, 0.8f);
         }
         else
         {
-            aS.Stop();
+            asMainThruster.Stop();
         }
     }
 
@@ -51,6 +57,7 @@ public class Rocket : MonoBehaviour
         float rotation = rcsThrust * Time.deltaTime;
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
         {
+            if (!asRCSThruster.isPlaying) asRCSThruster.PlayOneShot(rcsSound, 1f);
             rb.maxAngularVelocity = 0f; // reduces rotation enough to be able to turn
         }
         if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D))
@@ -65,7 +72,11 @@ public class Rocket : MonoBehaviour
         {
             transform.Rotate(0, 0, rotation, Space.World);
         }
-        else rb.maxAngularVelocity = 7f;
+        else
+        {
+            asRCSThruster.Stop();
+            rb.maxAngularVelocity = 7f;
+        }
     }
 
     void OnCollisionEnter(Collision collision)
@@ -103,13 +114,17 @@ public class Rocket : MonoBehaviour
 
     private void DeathOrVictorySound(AudioClip aC)
     {
+        asOthers.Stop();
+        asOthers.volume = 1f;
+        asRCSThruster.Stop();
+        asMainThruster.Stop();
         rb.maxAngularVelocity = 7f; //if player dies or wins holding A or B it resets anyway;
-        aS.Stop();
-        aS.PlayOneShot(aC, 1f);
+        asOthers.PlayOneShot(aC, 1f);
     }
 
     private void LoadNextScene()
     {
+        
         if (scene.name == "Sandbox")
             SceneManager.LoadScene(scene.buildIndex);
         else if ((scene.buildIndex + 1) < SceneManager.sceneCountInBuildSettings)
