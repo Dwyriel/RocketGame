@@ -8,7 +8,7 @@ public class Rocket : MonoBehaviour
 {
     Rigidbody rb;
     AudioSource asMainThruster, asRCSThruster, asOthers;
-    [SerializeField] float rcsThrust = 110f, mainThrust = 800f;
+    [SerializeField] float rcsThrust = 110f, mainThrust = 800f, musicVolume = 0.2f;
     [SerializeField] AudioClip mainEngine, rcsSound, death, win, bm;
     [SerializeField] ParticleSystem engineParticle, winParticle, deathParticle;
     enum State { Alive, Dying, Transcending }
@@ -24,7 +24,6 @@ public class Rocket : MonoBehaviour
         asRCSThruster = AudioSources[1];
         asOthers = AudioSources[2];
         asOthers.clip = bm;
-        asOthers.volume = 0.3f;
         asOthers.Play();
         scene = SceneManager.GetActiveScene();
     }
@@ -32,6 +31,7 @@ public class Rocket : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        asOthers.volume = musicVolume;
         if (pState == State.Alive)
         {
             InputThrust();

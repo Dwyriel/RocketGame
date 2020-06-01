@@ -23,7 +23,7 @@ RenderSettings:
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 0
+  m_AmbientIntensity: 0.2
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
@@ -35,10 +35,10 @@ RenderSettings:
   m_DefaultReflectionMode: 0
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 1
-  m_ReflectionIntensity: 0.05
+  m_ReflectionIntensity: 0.1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.088180326, g: 0.10234941, b: 0.12516782, a: 0.05}
+  m_IndirectSpecularColor: {r: 0.13612282, g: 0.15503627, b: 0.18549517, a: 0.1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -347,9 +347,65 @@ Transform:
   m_Children:
   - {fileID: 1411394093}
   - {fileID: 15741243}
+  - {fileID: 586226336}
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &586226335
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 466509747}
+    m_Modifications:
+    - target: {fileID: 1968255106849954, guid: 4093b9fa2a7d2e449990f044e5d3ce7d, type: 3}
+      propertyPath: m_Name
+      value: Plataform (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4960221084471398, guid: 4093b9fa2a7d2e449990f044e5d3ce7d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -7.37
+      objectReference: {fileID: 0}
+    - target: {fileID: 4960221084471398, guid: 4093b9fa2a7d2e449990f044e5d3ce7d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 31.53
+      objectReference: {fileID: 0}
+    - target: {fileID: 4960221084471398, guid: 4093b9fa2a7d2e449990f044e5d3ce7d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4960221084471398, guid: 4093b9fa2a7d2e449990f044e5d3ce7d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4960221084471398, guid: 4093b9fa2a7d2e449990f044e5d3ce7d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4960221084471398, guid: 4093b9fa2a7d2e449990f044e5d3ce7d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4960221084471398, guid: 4093b9fa2a7d2e449990f044e5d3ce7d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4960221084471398, guid: 4093b9fa2a7d2e449990f044e5d3ce7d, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4960221084471398, guid: 4093b9fa2a7d2e449990f044e5d3ce7d, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 39.546272
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4093b9fa2a7d2e449990f044e5d3ce7d, type: 3}
+--- !u!4 &586226336 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4960221084471398, guid: 4093b9fa2a7d2e449990f044e5d3ce7d,
+    type: 3}
+  m_PrefabInstance: {fileID: 586226335}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &784704754
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -615,11 +671,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4116466351321704, guid: 9efa4eb2a1f5265468ae814fe8864f05, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.92
+      value: -30.31
       objectReference: {fileID: 0}
     - target: {fileID: 4116466351321704, guid: 9efa4eb2a1f5265468ae814fe8864f05, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.12
+      value: 37.33
       objectReference: {fileID: 0}
     - target: {fileID: 4116466351321704, guid: 9efa4eb2a1f5265468ae814fe8864f05, type: 3}
       propertyPath: m_LocalPosition.z
