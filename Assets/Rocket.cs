@@ -10,7 +10,7 @@ public class Rocket : MonoBehaviour
     AudioSource asMainThruster, asRCSThruster, asOthers;
     enum State { Alive, Dying, Transcending, Debug }
     [SerializeField] State pState = State.Alive;
-    [SerializeField] float rcsThrust = 110f, mainThrust = 800f, musicVolume = 0.2f;
+    [SerializeField] float rcsThrust = 110f, mainThrust = 800f, musicVolume = 0.2f, fuel = 50f;
     [SerializeField] AudioClip mainEngine, rcsSound, death, win, bm;
     [SerializeField] ParticleSystem engineParticle, winParticle, deathParticle;
     Scene scene;
@@ -34,18 +34,25 @@ public class Rocket : MonoBehaviour
         if (Debug.isDebugBuild)
             DebugMode();
         asOthers.volume = musicVolume;
-        if (pState == State.Alive || pState.Equals(State.Debug))
+        if ((pState == State.Alive || pState.Equals(State.Debug)) && fuel > Mathf.Epsilon)
         {
             InputThrust();
             InputRotation();
         }
+        else if (fuel <= Mathf.Epsilon)
+        {
+            engineParticle.Stop();
+            asRCSThruster.Stop();
+            asMainThruster.Stop();
+        }
+        print(fuel);
     }
 
     private void DebugMode()
     {
         if (Input.GetKeyDown(KeyCode.L))
         {
-            LoadNextScene();
+            LoadNextLevel();
         }
         if (pState == State.Alive && Input.GetKeyDown(KeyCode.C))
             pState = State.Debug;
@@ -58,6 +65,7 @@ public class Rocket : MonoBehaviour
         float thrust = mainThrust * Time.deltaTime;
         if (Input.GetKey(KeyCode.W))
         {
+            ReduceFuel(1f);
             rb.AddRelativeForce(Vector3.up * thrust);
             if (!engineParticle.isEmitting) engineParticle.Play();
             if (!asMainThruster.isPlaying) asMainThruster.PlayOneShot(mainEngine, 0.8f);
@@ -72,8 +80,10 @@ public class Rocket : MonoBehaviour
     private void InputRotation()
     {
         float rotation = rcsThrust * Time.deltaTime;
+
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
         {
+            ReduceFuel(.5f);
             if (!asRCSThruster.isPlaying) asRCSThruster.PlayOneShot(rcsSound, 1f);
             rb.maxAngularVelocity = 0f; // reduces rotation enough to be able to turn
         }
@@ -96,15 +106,20 @@ public class Rocket : MonoBehaviour
         }
     }
 
+    private void ReduceFuel(float fuelPerSecond)
+    {
+        float reduction = fuelPerSecond * Time.deltaTime;
+        if (fuel > Mathf.Epsilon)
+            fuel -= reduction;
+        else fuel = 0f;
+    }
+
     void OnCollisionEnter(Collision collision)
     {
         if (pState == State.Alive)
             switch (collision.gameObject.tag)
             {
                 case "Friendly":
-                    break;
-                case "Fuel": // TODO
-                    print("got fuel");
                     break;
                 case "Finish":
                     Victory();
@@ -120,7 +135,7 @@ public class Rocket : MonoBehaviour
         DeathOrVictorySound(win);
         winParticle.Play();
         pState = State.Transcending;
-        Invoke("LoadNextScene", 3f);
+        Invoke("LoadNextLevel", 3f);
     }
 
     private void Death()
@@ -134,15 +149,15 @@ public class Rocket : MonoBehaviour
     private void DeathOrVictorySound(AudioClip aC)
     {
         engineParticle.Stop();
-        asOthers.Stop();
-        asOthers.volume = 1f;
         asRCSThruster.Stop();
         asMainThruster.Stop();
+        asOthers.Stop();
+        asOthers.volume = 1f;
         rb.maxAngularVelocity = 7f; //if player dies or wins holding A or B it resets anyway;
         asOthers.PlayOneShot(aC, 1f);
     }
 
-    private void LoadNextScene()
+    private void LoadNextLevel()
     {
         if (scene.name == "Sandbox")
             SceneManager.LoadScene(scene.buildIndex);

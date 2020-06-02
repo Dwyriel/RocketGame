@@ -5115,8 +5115,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4161d3aceb7b0fb4e8b2b2150f903d2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pState: 0
   rcsThrust: 110
   mainThrust: 800
+  musicVolume: 0.2
+  fuel: 50
   mainEngine: {fileID: 8300000, guid: 0217c6556ba0c1a43a1bd972a2c8e49b, type: 3}
   rcsSound: {fileID: 8300000, guid: a8f11b3a569297e47923f027a139fd9a, type: 3}
   death: {fileID: 8300000, guid: e07a7efd54d89ec49a7fbfdf325e6160, type: 3}
