@@ -275,21 +275,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 108128948206442598, guid: 052a5070d795a4441bb26e761e7fd12e,
-        type: 3}
-      propertyPath: m_BoundingSphereOverride.y
-      value: 3.279e-41
-      objectReference: {fileID: 0}
-    - target: {fileID: 108128948206442598, guid: 052a5070d795a4441bb26e761e7fd12e,
-        type: 3}
-      propertyPath: m_BoundingSphereOverride.w
-      value: -4.765752e-10
-      objectReference: {fileID: 0}
-    - target: {fileID: 114907231365161744, guid: 052a5070d795a4441bb26e761e7fd12e,
-        type: 3}
-      propertyPath: fuel
-      value: 50
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 052a5070d795a4441bb26e761e7fd12e, type: 3}
 --- !u!1001 &464415304
